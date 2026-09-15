@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useWallet } from '../hooks/useWallet';
 import { listCollections, listTokens, type NFTToken, type NFTCollection } from '../services/api';
-import { shortenAddress, formatStroops } from '../lib/utils';
-import { ExternalLink, Filter } from 'lucide-react';
+import { NFTCard } from '../components/NFTCard';
+import { Filter } from 'lucide-react';
 
 export function GalleryPage() {
-  const { isConnected, address } = useWallet();
+  const { isConnected } = useWallet();
   const [collections, setCollections] = useState<NFTCollection[]>([]);
   const [tokens, setTokens] = useState<NFTToken[]>([]);
   const [selectedCollection, setSelectedCollection] = useState<string>('all');
@@ -80,28 +80,7 @@ export function GalleryPage() {
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {tokens.map((token) => (
-            <div key={token.id} className="card group hover:border-stellar-700 transition-colors cursor-pointer">
-              {/* NFT Image Placeholder */}
-              <div className="aspect-square rounded-lg bg-dark-800 flex items-center justify-center overflow-hidden">
-                {token.image ? (
-                  <img src={token.image} alt={token.name || `#${token.tokenId}`} className="h-full w-full object-cover" />
-                ) : (
-                  <div className="text-4xl text-dark-600">#{token.tokenId}</div>
-                )}
-              </div>
-              {/* Info */}
-              <div className="mt-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-medium text-sm truncate">
-                    {token.name || `Token #${token.tokenId}`}
-                  </h3>
-                  <ExternalLink className="h-3 w-3 text-dark-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
-                <p className="mt-1 text-xs text-dark-500">
-                  Owner: {shortenAddress(token.owner)}
-                </p>
-              </div>
-            </div>
+            <NFTCard key={token.id} token={token} />
           ))}
         </div>
       )}
